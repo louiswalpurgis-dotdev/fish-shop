@@ -1,0 +1,6 @@
+{
+    "docify.commentService.autoTranslationService": "English",
+    "docify.translateService.targetLanguage": "Vietnamese",
+    "docify.commentService.docstringFormat": "Google",
+    "docify.commentService.programmingLanguage": "javascript"
+}

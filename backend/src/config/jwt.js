@@ -1,0 +1,9 @@
+/*
+*    ttl: 3600 // 1 hour
+*    ttl: '1h' // 1 hour
+*    ttl: '7d' // 7 days
+*/
+module.exports = { 
+    secret: process.env.APPSETTING_JWT_SECRET,
+    ttl: 3600
+}
