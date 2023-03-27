@@ -4,6 +4,6 @@
 *    ttl: '7d' // 7 days
 */
 module.exports = { 
-    secret: process.env.APPSETTING_JWT_SECRET,
+    secret: process.env.JWT_SECRET,
     ttl: 3600
 }
