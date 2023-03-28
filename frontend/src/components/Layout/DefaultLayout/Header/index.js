@@ -1,41 +1,31 @@
+import lottie from 'lottie-web';
+import { defineElement } from 'lord-icon-element';
 import React, { useState, useEffect } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from '~/api/axios';
-
+import { Navbar, Button, Text, Input, Dropdown, Grid } from '@nextui-org/react';
 import { connect } from 'react-redux';
 
 const MenuBarItem = [
-    {
-        path: '/',
-        name: 'Trang chủ',
-    },
-    {
-        path: '/admin/createproduct',
-        name: 'Thêm sản phẩm',
-    },
-    {
-        path: '/admin',
-        name: 'Admin',
-    },
+    { key: 1, path: '/', name: 'Trang chủ' },
+    { key: 2, path: '/admin/createproduct', name: 'Tạo sản phẩm' },
+    { key: 3, path: '/admin', name: 'Admin' },
 ];
 
 const SearchPage = '/search';
 
 const ShoppingCardPage = '/cart';
 
-const SignIn = [
-    {
-        path: '/login',
-        name: 'Đăng nhập',
-    },
-];
+const SignIn = [{ path: '/login', name: 'Đăng nhập' }];
 
-const SignUp = [
-    {
-        path: '/register',
-        name: 'Đăng ký',
-    },
+const SignUp = [{ path: '/register', name: 'Đăng ký' }];
+
+const menuItems = [
+    { key: 'new', name: 'New File' },
+    { key: 'copy', name: 'Copy Link' },
+    { key: 'edit', name: 'Edit File' },
+    { key: 'delete', name: 'Delete File' },
 ];
 
 export const MenuIcon = () => {
@@ -97,13 +87,7 @@ export const ShoppingCardIcon = () => {
         </svg>
     );
 };
-
-const MenuBarItemCss =
-    'block py-2 pl-3 pr-4 text-gray-800 rounded lg:bg-transparent lg:p-0 focus:text-purple-700 hover:text-purple-700 dark:text-gray-300';
-const SignInCss =
-    'text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800';
-const SignUpCss =
-    'text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800';
+defineElement(lottie.loadAnimation);
 
 function Header(props) {
     const navigate = useNavigate();
@@ -136,128 +120,188 @@ function Header(props) {
         });
     };
     return (
-        <header className="sticky top-0 z-10 w-full">
-            <nav className="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
-                <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
-                    {/* MenuBar */}
-                    <div className="items-center justify-between hidden w-full lg:flex lg:w-auto lg:order-1">
-                        <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-                            {MenuBarItem.map((item, index) => (
-                                <li key={index}>
-                                    <NavLink to={item.path} className={MenuBarItemCss}>
+        // <header className="sticky top-0 z-10 w-full">
+        //     <nav className="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
+        //         <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
+        //             {/* MenuBar */}
+        //             <div className="items-center justify-between hidden w-full lg:flex lg:w-auto lg:order-1">
+        //                 <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+        //                     {MenuBarItem.map((item, index) => (
+        //                         <li key={index}>
+        //                             <NavLink to={item.path} className={MenuBarItemCss}>
+        //                                 {item.name}
+        //                             </NavLink>
+        //                         </li>
+        //                     ))}
+        //                 </ul>
+        //             </div>
+        //             {/* MenuBar */}
+
+        //             {/* LOGO&IC */}
+        //             <div className="flex gap-x-4 items-center">
+        //                 <span className="lg:hidden self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+        //                     <MenuIcon />
+        //                 </span>
+        //                 <Link to="/" className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+        //                     MA ĐẠO SIR
+        //                 </Link>
+        //             </div>
+        //             {/* LOGO&IC */}
+
+        //             <div className="flex gap-x-1 items-center lg:order-2">
+        //                 {/* SearchInput */}
+        //                 <div className="mr-2 hidden md:block items-center">
+        //                     <div className="relative w-full">
+        //                         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+        //                             <button type="submit" title="Search" className="p-1 focus:outline-none focus:ring">
+        //                                 <SearchInputIcon />
+        //                             </button>
+        //                         </span>
+        //                         <input
+        //                             value={query}
+        //                             onChange={handleChange}
+        //                             type="search"
+        //                             name="Search"
+        //                             placeholder="Tìm kiếm..."
+        //                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        //                         />
+        //                         <div className="absolute left-0 items-center max-h-60 overflow-y-auto bg-slate-50 text-black-100">
+        //                             <ul className="items-center">
+        //                                 {state.query === ''
+        //                                     ? ''
+        //                                     : state.list.map((item) => {
+        //                                           return (
+        //                                               <li
+        //                                                   key={item.id}
+        //                                                   onClick={() => {
+        //                                                       setstate({
+        //                                                           query: '',
+        //                                                           list: products,
+        //                                                       });
+        //                                                       setquery('');
+        //                                                   }}
+        //                                               >
+        //                                                   {' '}
+        //                                                   <NavLink to={`/product/${item.slug}`}>
+        //                                                       {item.name}
+        //                                                   </NavLink>{' '}
+        //                                               </li>
+        //                                           );
+        //                                       })}
+        //                             </ul>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //                 {/* SearchInput */}
+
+        //                 {/* icSearchMobile */}
+        //                 <NavLink
+        //                     to={SearchPage}
+        //                     className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        //                 >
+        //                     <SearchMobileIcon />
+        //                 </NavLink>
+        //                 {/* <icSearchMobile */}
+
+        //                 {/* icShoppingCard */}
+        //                 <NavLink
+        //                     to={ShoppingCardPage}
+        //                     className="relative inline-flex items-center p-3 ml-1 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        //                 >
+        //                     <ShoppingCardIcon />
+        //                     <span className="absolute top-1 right-1 w-3 h-3 flex items-center justify-center text-[8px] rounded-full text-white bg-red-500">
+        //                         {carts}
+        //                     </span>
+        //                 </NavLink>
+        //                 {/* <icShoppingCard */}
+        //                 {cookie.username ? (
+        //                     <>
+        //                         <Link
+        //                             to={`/profile/${cookie.username}`}
+        //                             className="mx-4 block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+        //                         >
+        //                             {cookie.username}
+        //                         </Link>
+        //                         <Link
+        //                             to="/logout"
+        //                             className="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800"
+        //                         >
+        //                             Đăng Xuất
+        //                         </Link>
+        //                     </>
+        //                 ) : (
+        //                     <>
+        //                         {/* SignIn */}
+        //                         {SignIn.map((login, index) => (
+        //                             <NavLink to={login.path} key={index} className={SignInCss}>
+        //                                 {login.name}
+        //                             </NavLink>
+        //                         ))}
+        //                         {/* SignIn */}
+
+        //                         {/* SignUp */}
+        //                         {SignUp.map((register, index) => (
+        //                             <NavLink to={register.path} key={index} className={SignUpCss}>
+        //                                 {register.name}
+        //                             </NavLink>
+        //                         ))}
+        //                         {/* SignUp */}
+        //                     </>
+        //                 )}
+        //             </div>
+        //         </div>
+        //     </nav>
+        // </header>
+        <Navbar isBordered variant="sticky">
+            <Navbar.Brand>
+                <Grid.Container gap={2}>
+                    <Grid>
+                        <Navbar.Content hideIn="xs">
+                            <Text b color="inherit">
+                                CON CÁ
+                            </Text>
+                        </Navbar.Content>
+                    </Grid>
+                    <Grid>
+                        <Dropdown>
+                            <Dropdown.Button flat>Khám phá</Dropdown.Button>
+                            <Dropdown.Menu aria-label="Dynamic Actions" items={menuItems}>
+                                {(item) => (
+                                    <Dropdown.Item key={item.key} color={item.key === 'delete' ? 'error' : 'default'}>
                                         {item.name}
-                                    </NavLink>
-                                </li>
+                                    </Dropdown.Item>
+                                )}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Grid>
+                    <Grid>
+                        <Navbar.Content hideIn="xs">
+                            {MenuBarItem.map((item) => (
+                                <Navbar.Link as={Link} key={item.key} to={item.path}>
+                                    {item.name}
+                                </Navbar.Link>
                             ))}
-                        </ul>
-                    </div>
-                    {/* MenuBar */}
-
-                    {/* LOGO&IC */}
-                    <div className="flex gap-x-4 items-center">
-                        <span className="lg:hidden self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                            <MenuIcon />
-                        </span>
-                        <Link to="/" className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                            MA ĐẠO SIR
-                        </Link>
-                    </div>
-                    {/* LOGO&IC */}
-
-                    <div className="flex gap-x-1 items-center lg:order-2">
-                        {/* SearchInput */}
-                        <div className="mr-2 hidden md:block items-center">
-                            <div className="relative w-full">
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                                    <button type="submit" title="Search" className="p-1 focus:outline-none focus:ring">
-                                        <SearchInputIcon />
-                                    </button>
-                                </span>
-                                <input
-                                    value={query}
-                                    onChange={handleChange}
-                                    type="search"
-                                    name="Search"
-                                    placeholder="Tìm kiếm..."
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                />
-                                <div className="absolute left-0 items-center max-h-60 overflow-y-auto bg-slate-50 text-black-100">
-                                    <ul className='items-center'>
-                                        {state.query === ''
-                                            ? ''
-                                            : state.list.map((item) => {
-                                                  return <li key={item.id} onClick={() =>{
-                                                    setstate({
-                                                      query: '',
-                                                      list: products,
-                                                  });
-                                                  setquery('');
-                                                  }} > <NavLink to={`/product/${item.slug}`}>{item.name}</NavLink> </li>;
-                                              })}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        {/* SearchInput */}
-
-                        {/* icSearchMobile */}
-                        <NavLink
-                            to={SearchPage}
-                            className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                        >
-                            <SearchMobileIcon />
-                        </NavLink>
-                        {/* <icSearchMobile */}
-
-                        {/* icShoppingCard */}
-                        <NavLink
-                            to={ShoppingCardPage}
-                            className="relative inline-flex items-center p-3 ml-1 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                        >
-                            <ShoppingCardIcon />
-                            <span className="absolute top-1 right-1 w-3 h-3 flex items-center justify-center text-[8px] rounded-full text-white bg-red-500">
-                                {carts}
-                            </span>
-                        </NavLink>
-                        {/* <icShoppingCard */}
-                        {cookie.username ? (
-                            <>
-                                <Link
-                                    to={`/profile/${cookie.username}`}
-                                    className="mx-4 block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-                                >
-                                    {cookie.username}
-                                </Link>
-                                <Link
-                                    to="/logout"
-                                    className="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800"
-                                >
-                                    Đăng Xuất
-                                </Link>
-                            </>
-                        ) : (
-                            <>
-                                {/* SignIn */}
-                                {SignIn.map((login, index) => (
-                                    <NavLink to={login.path} key={index} className={SignInCss}>
-                                        {login.name}
-                                    </NavLink>
-                                ))}
-                                {/* SignIn */}
-
-                                {/* SignUp */}
-                                {SignUp.map((register, index) => (
-                                    <NavLink to={register.path} key={index} className={SignUpCss}>
-                                        {register.name}
-                                    </NavLink>
-                                ))}
-                                {/* SignUp */}
-                            </>
-                        )}
-                    </div>
-                </div>
-            </nav>
-        </header>
+                        </Navbar.Content>
+                    </Grid>
+                </Grid.Container>
+            </Navbar.Brand>
+            <Navbar.Content>
+                <Input clearable bordered placeholder="Tìm kiếm" />
+                <lord-icon
+                    src="https://cdn.lordicon.com/ynwbvguu.json"
+                    trigger="hover"
+                    style={{ width: 2 + 'em', height: 2 + 'em' }}
+                ></lord-icon>
+                <Navbar.Link color="inherit" href="#">
+                    Login
+                </Navbar.Link>
+                <Navbar.Item>
+                    <Button auto flat as={Link} href="#">
+                        Sign Up
+                    </Button>
+                </Navbar.Item>
+            </Navbar.Content>
+        </Navbar>
     );
 }
 const mapStateToProps = (state) => {
