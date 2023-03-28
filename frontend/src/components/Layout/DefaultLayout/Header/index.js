@@ -1,10 +1,10 @@
 import lottie from 'lottie-web';
 import { defineElement } from 'lord-icon-element';
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from '~/api/axios';
-import { Navbar, Button, Text, Input, Dropdown, Grid } from '@nextui-org/react';
+import { Navbar, Text, Input, Dropdown, Grid, User, Tooltip } from '@nextui-org/react';
 import { connect } from 'react-redux';
 
 const MenuBarItem = [
@@ -17,81 +17,18 @@ const SearchPage = '/search';
 
 const ShoppingCardPage = '/cart';
 
-const SignIn = [{ path: '/login', name: 'Đăng nhập' }];
-
-const SignUp = [{ path: '/register', name: 'Đăng ký' }];
-
 const menuItems = [
     { key: 'new', name: 'New File' },
     { key: 'copy', name: 'Copy Link' },
     { key: 'edit', name: 'Edit File' },
     { key: 'delete', name: 'Delete File' },
 ];
-
-export const MenuIcon = () => {
-    return (
-        <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16"></path>
-        </svg>
-    );
-};
-
-export const SearchMobileIcon = () => {
-    return (
-        <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-        </svg>
-    );
-};
-
-export const SearchInputIcon = () => {
-    return (
-        <svg fill="currentColor" viewBox="0 0 512 512" className="w-4 h-4 dark:text-gray-100">
-            <path d="M479.6,399.716l-81.084-81.084-62.368-25.767A175.014,175.014,0,0,0,368,192c0-97.047-78.953-176-176-176S16,94.953,16,192,94.953,368,192,368a175.034,175.034,0,0,0,101.619-32.377l25.7,62.2L400.4,478.911a56,56,0,1,0,79.2-79.195ZM48,192c0-79.4,64.6-144,144-144s144,64.6,144,144S271.4,336,192,336,48,271.4,48,192ZM456.971,456.284a24.028,24.028,0,0,1-33.942,0l-76.572-76.572-23.894-57.835L380.4,345.771l76.573,76.572A24.028,24.028,0,0,1,456.971,456.284Z"></path>
-        </svg>
-    );
-};
-
-export const ShoppingCardIcon = () => {
-    return (
-        <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-        </svg>
-    );
-};
 defineElement(lottie.loadAnimation);
 
 function Header(props) {
-    const navigate = useNavigate();
+    const location = useLocation();
     const [cookie, setCookie] = useCookies(['cookie']);
+    const [path, setPath] = useState('');
     const carts = props.cart.length;
     const GET_PRODUCT_URL = '/';
 
@@ -101,12 +38,14 @@ function Header(props) {
         query: '',
         list: [],
     });
-
     useEffect(() => {
         axios.get(GET_PRODUCT_URL).then((products) => {
             setProducts(products.data);
         });
     }, []);
+    useEffect(() => {
+        setPath(location.pathname);
+    }, [location.pathname]);
 
     const handleChange = (e) => {
         const results = products.filter((product) => {
@@ -123,31 +62,6 @@ function Header(props) {
         // <header className="sticky top-0 z-10 w-full">
         //     <nav className="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
         //         <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
-        //             {/* MenuBar */}
-        //             <div className="items-center justify-between hidden w-full lg:flex lg:w-auto lg:order-1">
-        //                 <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-        //                     {MenuBarItem.map((item, index) => (
-        //                         <li key={index}>
-        //                             <NavLink to={item.path} className={MenuBarItemCss}>
-        //                                 {item.name}
-        //                             </NavLink>
-        //                         </li>
-        //                     ))}
-        //                 </ul>
-        //             </div>
-        //             {/* MenuBar */}
-
-        //             {/* LOGO&IC */}
-        //             <div className="flex gap-x-4 items-center">
-        //                 <span className="lg:hidden self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-        //                     <MenuIcon />
-        //                 </span>
-        //                 <Link to="/" className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-        //                     MA ĐẠO SIR
-        //                 </Link>
-        //             </div>
-        //             {/* LOGO&IC */}
-
         //             <div className="flex gap-x-1 items-center lg:order-2">
         //                 {/* SearchInput */}
         //                 <div className="mr-2 hidden md:block items-center">
@@ -213,41 +127,7 @@ function Header(props) {
         //                         {carts}
         //                     </span>
         //                 </NavLink>
-        //                 {/* <icShoppingCard */}
-        //                 {cookie.username ? (
-        //                     <>
-        //                         <Link
-        //                             to={`/profile/${cookie.username}`}
-        //                             className="mx-4 block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
-        //                         >
-        //                             {cookie.username}
-        //                         </Link>
-        //                         <Link
-        //                             to="/logout"
-        //                             className="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800"
-        //                         >
-        //                             Đăng Xuất
-        //                         </Link>
-        //                     </>
-        //                 ) : (
-        //                     <>
-        //                         {/* SignIn */}
-        //                         {SignIn.map((login, index) => (
-        //                             <NavLink to={login.path} key={index} className={SignInCss}>
-        //                                 {login.name}
-        //                             </NavLink>
-        //                         ))}
-        //                         {/* SignIn */}
-
-        //                         {/* SignUp */}
-        //                         {SignUp.map((register, index) => (
-        //                             <NavLink to={register.path} key={index} className={SignUpCss}>
-        //                                 {register.name}
-        //                             </NavLink>
-        //                         ))}
-        //                         {/* SignUp */}
-        //                     </>
-        //                 )}
+        //                 {/* <icShoppingCard */
         //             </div>
         //         </div>
         //     </nav>
@@ -257,15 +137,26 @@ function Header(props) {
                 <Grid.Container gap={2}>
                     <Grid>
                         <Navbar.Content hideIn="xs">
-                            <Text b color="inherit">
-                                CON CÁ
-                            </Text>
+                            <Tooltip content={'Trang chủ'} placement="bottom">
+                                <Navbar.Link as={Link} to="/">
+                                    <Text
+                                        h5
+                                        size={20}
+                                        css={{
+                                            textGradient: '45deg, $blue600 -20%, $pink600 50%',
+                                        }}
+                                        weight="bold"
+                                    >
+                                        Con cá
+                                    </Text>
+                                </Navbar.Link>
+                            </Tooltip>
                         </Navbar.Content>
                     </Grid>
                     <Grid>
                         <Dropdown>
                             <Dropdown.Button flat>Khám phá</Dropdown.Button>
-                            <Dropdown.Menu aria-label="Dynamic Actions" items={menuItems}>
+                            <Dropdown.Menu items={menuItems}>
                                 {(item) => (
                                     <Dropdown.Item key={item.key} color={item.key === 'delete' ? 'error' : 'default'}>
                                         {item.name}
@@ -277,29 +168,66 @@ function Header(props) {
                     <Grid>
                         <Navbar.Content hideIn="xs">
                             {MenuBarItem.map((item) => (
-                                <Navbar.Link as={Link} key={item.key} to={item.path}>
-                                    {item.name}
-                                </Navbar.Link>
+                                <Tooltip content={item.name} placement="bottom" key={item.key}>
+                                    <Navbar.Link as={Link} to={item.path} isActive={path === item.path ? true : false}>
+                                        {item.name}
+                                    </Navbar.Link>
+                                </Tooltip>
                             ))}
                         </Navbar.Content>
                     </Grid>
                 </Grid.Container>
             </Navbar.Brand>
-            <Navbar.Content>
-                <Input clearable bordered placeholder="Tìm kiếm" />
+            <Navbar.Content activeColor="primary" variant="highlight-rounded">
+                <Input clearable bordered placeholder="Tìm kiếm" value={query} onChange={handleChange} />
                 <lord-icon
                     src="https://cdn.lordicon.com/ynwbvguu.json"
                     trigger="hover"
                     style={{ width: 2 + 'em', height: 2 + 'em' }}
                 ></lord-icon>
-                <Navbar.Link color="inherit" href="#">
-                    Login
+                <Navbar.Link as={Link} to={ShoppingCardPage}>
+                    <lord-icon
+                        src="https://cdn.lordicon.com/slkvcfos.json"
+                        trigger="hover"
+                        style={{ width: 3 + 'em', height: 3 + 'em', color: 'red' }}
+                    ></lord-icon>
                 </Navbar.Link>
-                <Navbar.Item>
-                    <Button auto flat as={Link} href="#">
-                        Sign Up
-                    </Button>
-                </Navbar.Item>
+                {cookie.username ? (
+                    <>
+                        <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" zoomed>
+                            <User.Link as={Link} to={`/profile/${cookie.username}`} target="_self">
+                                {cookie.username}
+                            </User.Link>
+                        </User>
+                        <Navbar.Link as={Link} to="/logout" auto="true" flat="true" isActive variant="highlight">
+                            Đăng xuất
+                        </Navbar.Link>
+                    </>
+                ) : (
+                    <>
+                        <Tooltip content={'Đăng nhập'} placement="bottom">
+                            <Navbar.Link
+                                as={Link}
+                                to="/login"
+                                color="inherit"
+                                isActive={path == '/login' ? true : false}
+                            >
+                                Đăng nhập
+                            </Navbar.Link>
+                        </Tooltip>
+                        <Tooltip content={'Đăng ký'} placement="bottom">
+                            <Navbar.Link
+                                as={Link}
+                                to="/register"
+                                auto="true"
+                                flat="true"
+                                isActive={path == '/register' ? true : false}
+                            >
+                                Đăng ký
+                            </Navbar.Link>
+                        </Tooltip>
+                    </>
+                )}
             </Navbar.Content>
         </Navbar>
     );
