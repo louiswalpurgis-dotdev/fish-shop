@@ -21,13 +21,14 @@ function ManagerProduct() {
     }, []);
 
     function handleDelete(product) {
-    const DELETE_USER_URL=`/product/${product.id}/delete`
-        axios.delete(DELETE_USER_URL,{
-            id:product.id
-        })
-        .then(window.location.reload())
-        .catch(err => console.log(err))
-    } 
+        const DELETE_USER_URL = `/product/${product.id}/delete`;
+        axios
+            .delete(DELETE_USER_URL, {
+                id: product.id,
+            })
+            .then(window.location.reload())
+            .catch((err) => console.log(err));
+    }
     return (
         <>
             <div className="max-w-7xl mx-auto">
@@ -90,18 +91,15 @@ function ManagerProduct() {
                                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 {product.name}
                                             </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm">
-                                                {product.price}
-                                            </td>
+                                            <td className="whitespace-nowrap px-3 py-4 text-sm">{product.price}</td>
                                             <td className="whitespace-nowrap px-3 py-4 text-sm">{product.amount}</td>
                                             <td className="whitespace-nowrap px-3 py-4 text-sm">
                                                 <textarea
-                                                readOnly
-                                                rows="5"
-                                                className='overflow-hidden w-full'
-                                                value={product.info}
-                                                >
-                                                </textarea>
+                                                    readOnly
+                                                    rows="5"
+                                                    className="overflow-hidden w-full"
+                                                    value={product.info}
+                                                ></textarea>
                                             </td>
                                             <td className="whitespace-nowrap px-3 py-4 text-sm flex justify-around items-center">
                                                 <img src={product.image} className="w-10 h-10 rounded-full" />
@@ -114,12 +112,8 @@ function ManagerProduct() {
                                                     <Link to={`/product/${product.id}/update`}>
                                                         <PencilSquareIcon className="h-6 w-6 hover:text-blue-500" />
                                                     </Link>
-                                                    <button 
-                                                    onClick={() => handleDelete(product)}
-                                                    >
-                                                        <TrashIcon 
-                                                        className="h-6 w-6 text-blue-500"
-                                                     />
+                                                    <button onClick={() => handleDelete(product)}>
+                                                        <TrashIcon className="h-6 w-6 text-blue-500" />
                                                     </button>
                                                 </div>
                                             </td>
