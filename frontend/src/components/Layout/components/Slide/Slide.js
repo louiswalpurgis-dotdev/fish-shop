@@ -24,7 +24,7 @@ export const BookIcon = () => {
 
 function Slide() {
     return (
-        <section className="flex flex-wrap items-center justify-between max-w-screen-xl py-2 lg:py-5 px-4 mx-auto">
+        <section className="flex flex-wrap items-center justify-between max-w-screen-xl py-2 lg:py-5">
             <div className="flex-1 flex flex-col items-start gap-6">
                 <div className="flex items-center gap-2 justify-center bg-violet-100 px-4 py-1 rounded-full">
                     <p className="text-base text-violet-500 font-semibold">Cá cảnh</p>
@@ -75,7 +75,6 @@ function Slide() {
                     </Link>
                 </div>
             </div>
-
             <div className="lg:block flex-col hidden items-center justify-center relative">
                 <img src={FishSlide} className="w-80" alt="..." />
             </div>

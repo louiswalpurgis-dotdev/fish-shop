@@ -10,12 +10,10 @@ import { connect } from 'react-redux';
 const MenuBarItem = [
     { key: 1, path: '/', name: 'Trang chủ' },
     { key: 2, path: '/admin/createproduct', name: 'Tạo sản phẩm' },
-    { key: 3, path: '/admin', name: 'Admin' },
+    { key: 3, path: '/admin', name: 'Quản lý' },
 ];
 
-const SearchPage = '/search';
-
-const ShoppingCardPage = '/cart';
+const shoppingCardPage = '/cart';
 
 const menuItems = [
     { key: 'new', name: 'New File' },
@@ -23,6 +21,7 @@ const menuItems = [
     { key: 'edit', name: 'Edit File' },
     { key: 'delete', name: 'Delete File' },
 ];
+
 defineElement(lottie.loadAnimation);
 
 function Header(props) {
@@ -32,17 +31,19 @@ function Header(props) {
     const carts = props.cart.length;
     const GET_PRODUCT_URL = '/';
 
-    const [query, setquery] = useState('');
+    const [query, setQuery] = useState('');
     const [products, setProducts] = useState([]);
-    const [state, setstate] = useState({
+    const [state, setState] = useState({
         query: '',
         list: [],
     });
+
     useEffect(() => {
-        axios.get(GET_PRODUCT_URL).then((products) => {
-            setProducts(products.data);
+        axios.get(GET_PRODUCT_URL).then((response) => {
+            setProducts(response.data);
         });
     }, []);
+
     useEffect(() => {
         setPath(location.pathname);
     }, [location.pathname]);
@@ -52,62 +53,15 @@ function Header(props) {
             if (e.target.value === '') return products;
             return product.name.toLowerCase().includes(e.target.value.toLowerCase());
         });
-        setquery(e.target.value);
-        setstate({
+
+        setQuery(e.target.value);
+        setState({
             query: e.target.value,
             list: results,
         });
     };
-    return (
-        // <header className="sticky top-0 z-10 w-full">
-        //     <nav className="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
-        //         <div className="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
-        //             <div className="flex gap-x-1 items-center lg:order-2">
-        //                 {/* SearchInput */}
-        //                 <div className="mr-2 hidden md:block items-center">
-        //                     <div className="relative w-full">
-        //                         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-        //                             <button type="submit" title="Search" className="p-1 focus:outline-none focus:ring">
-        //                                 <SearchInputIcon />
-        //                             </button>
-        //                         </span>
-        //                         <input
-        //                             value={query}
-        //                             onChange={handleChange}
-        //                             type="search"
-        //                             name="Search"
-        //                             placeholder="Tìm kiếm..."
-        //                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        //                         />
-        //                         <div className="absolute left-0 items-center max-h-60 overflow-y-auto bg-slate-50 text-black-100">
-        //                             <ul className="items-center">
-        //                                 {state.query === ''
-        //                                     ? ''
-        //                                     : state.list.map((item) => {
-        //                                           return (
-        //                                               <li
-        //                                                   key={item.id}
-        //                                                   onClick={() => {
-        //                                                       setstate({
-        //                                                           query: '',
-        //                                                           list: products,
-        //                                                       });
-        //                                                       setquery('');
-        //                                                   }}
-        //                                               >
-        //                                                   {' '}
-        //                                                   <NavLink to={`/product/${item.slug}`}>
-        //                                                       {item.name}
-        //                                                   </NavLink>{' '}
-        //                                               </li>
-        //                                           );
-        //                                       })}
-        //                             </ul>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //                 {/* SearchInput */}
 
+    return (
         //                 {/* icSearchMobile */}
         //                 <NavLink
         //                     to={SearchPage}
@@ -128,11 +82,7 @@ function Header(props) {
         //                     </span>
         //                 </NavLink>
         //                 {/* <icShoppingCard */
-        //             </div>
-        //         </div>
-        //     </nav>
-        // </header>
-        <Navbar isBordered variant="sticky">
+        <Navbar variant="sticky">
             <Navbar.Brand>
                 <Grid.Container gap={2}>
                     <Grid>
@@ -180,18 +130,51 @@ function Header(props) {
             </Navbar.Brand>
             <Navbar.Content activeColor="primary" variant="highlight-rounded">
                 <Input clearable bordered placeholder="Tìm kiếm" value={query} onChange={handleChange} />
-                <lord-icon
-                    src="https://cdn.lordicon.com/ynwbvguu.json"
-                    trigger="hover"
-                    style={{ width: 2 + 'em', height: 2 + 'em' }}
-                ></lord-icon>
-                <Navbar.Link as={Link} to={ShoppingCardPage}>
-                    <lord-icon
-                        src="https://cdn.lordicon.com/slkvcfos.json"
-                        trigger="hover"
-                        style={{ width: 3 + 'em', height: 3 + 'em', color: 'red' }}
-                    ></lord-icon>
-                </Navbar.Link>
+                {/* <div className="absolute left-0 items-center max-h-60 overflow-y-auto bg-slate-50 text-black-100">
+                    <ul className="items-center">
+                        {state.query === ''
+                            ? ''
+                            : state.list.map((item) => {
+                                  return (
+                                      <li
+                                          key={item.id}
+                                          onClick={() => {
+                                              setstate({
+                                                  query: '',
+                                                  list: products,
+                                              });
+                                              setquery('');
+                                          }}
+                                      >
+                                          {' '}
+                                          <NavLink to={`/product/${item.slug}`}>{item.name}</NavLink>{' '}
+                                      </li>
+                                  );
+                              })}
+                    </ul>
+                </div> */}
+                {/* <Tooltip placement="Tạo">
+                    <Link as={Link} to={createProduct}>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/ynwbvguu.json"
+                            trigger="hover"
+                            style={{ width: 1.5 + 'em', height: 1.5 + 'em' }}
+                        ></lord-icon>
+                    </Link>
+                </Tooltip> */}
+                <Tooltip content="Giỏ hàng" placement="bottom" className="mx-4">
+                    <Link as={Link} to={shoppingCardPage}>
+                        <lord-icon
+                            src="https://cdn.lordicon.com/slkvcfos.json"
+                            trigger="hover"
+                            style={{ width: '2em', height: '2em', color: 'red' }}
+                        ></lord-icon>
+                    </Link>
+                    <span className="w-3 h-3 flex items-center justify-center text-[8px] rounded-full text-white bg-red-500">
+                        {carts}
+                    </span>
+                </Tooltip>
+
                 {cookie.username ? (
                     <>
                         <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" zoomed>
