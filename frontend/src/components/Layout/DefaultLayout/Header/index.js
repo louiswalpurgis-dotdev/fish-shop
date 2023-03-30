@@ -1,15 +1,16 @@
 import lottie from 'lottie-web';
 import { defineElement } from 'lord-icon-element';
-import logo from '~/assets/logo.png';
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link as reactLink, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from '~/api/axios';
-import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image } from '@nextui-org/react';
+import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image, Link } from '@nextui-org/react';
 import { connect } from 'react-redux';
+import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 
 import Login from '../../Auth/Login';
 import Register from '../../Auth/register';
+import logo from '~/assets/logo.png';
 
 const MenuBarItem = [
     { key: 1, path: '/', name: 'Trang chủ' },
@@ -86,13 +87,13 @@ function Header(props) {
         //                     </span>
         //                 </NavLink>
         //                 {/* <icShoppingCard */
-        <Navbar variant="sticky" css={{ paddingLeft: 0, paddingRight: 0 }}>
+        <Navbar isBordered variant="floating" css={{ paddingLeft: 0, paddingRight: 0 }}>
             <Navbar.Brand>
                 <Grid.Container gap={2}>
                     <Grid>
                         <Navbar.Content hideIn="xs">
                             <Tooltip content={'Trang chủ'} placement="bottom">
-                                <Navbar.Link as={Link} to="/">
+                                <Navbar.Link as={reactLink} to="/">
                                     <Image src={logo} css={{ w: 80 }}></Image>
                                     {/* <Text
                                         size={20}
@@ -113,7 +114,11 @@ function Header(props) {
                             <Dropdown.Menu items={menuItems}>
                                 {(item) => (
                                     <Dropdown.Item key={item.key}>
-                                        <Link as={Link} to={item.path} isActive={path === item.path ? true : false}>
+                                        <Link
+                                            as={reactLink}
+                                            to={item.path}
+                                            isActive={path === item.path ? true : false}
+                                        >
                                             {item.name}
                                         </Link>
                                     </Dropdown.Item>
@@ -125,7 +130,11 @@ function Header(props) {
                         <Navbar.Content hideIn="xs">
                             {MenuBarItem.map((item) => (
                                 <Tooltip content={item.name} placement="bottom" key={item.key}>
-                                    <Navbar.Link as={Link} to={item.path} isActive={path === item.path ? true : false}>
+                                    <Navbar.Link
+                                        as={reactLink}
+                                        to={item.path}
+                                        isActive={path === item.path ? true : false}
+                                    >
                                         {item.name}
                                     </Navbar.Link>
                                 </Tooltip>
@@ -162,12 +171,8 @@ function Header(props) {
                 </div> */}
 
                 <Tooltip content="Giỏ hàng" placement="bottom" className="mx-4">
-                    <Link as={Link} to={shoppingCardPage}>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/slkvcfos.json"
-                            trigger="hover"
-                            style={{ width: '2em', height: '2em', color: 'red' }}
-                        ></lord-icon>
+                    <Link as={reactLink} to={shoppingCardPage}>
+                        <ShoppingCartIcon style={{ width: 2 + 'em', height: 2 + 'em', color: 'black' }} />
                     </Link>
                     <span className="w-3 h-3 flex items-center justify-center text-[8px] rounded-full text-white bg-red-500">
                         {carts}
@@ -177,11 +182,11 @@ function Header(props) {
                 {cookie.username ? (
                     <>
                         <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" zoomed>
-                            <User.Link as={Link} to={`/profile/${cookie.username}`} target="_self">
+                            <User.Link as={reactLink} to={`/profile/${cookie.username}`} target="_self">
                                 {cookie.username}
                             </User.Link>
                         </User>
-                        <Navbar.Link as={Link} to="/logout" auto="true" flat="true" isActive variant="highlight">
+                        <Navbar.Link as={reactLink} to="/logout" auto="true" flat="true" isActive variant="highlight">
                             Đăng xuất
                         </Navbar.Link>
                     </>

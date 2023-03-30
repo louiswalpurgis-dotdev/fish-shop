@@ -85,7 +85,7 @@ function ProductCard() {
         );
     };
     return (
-        <Grid.Container gap={2} justify="center">
+        <Grid.Container gap={2} justify="flex-start">
             {data.map((item) => {
                 return (
                     <Grid xs={6} sm={4} md={3} lg={3} xl={2} key={item.id}>
