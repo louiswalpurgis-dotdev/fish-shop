@@ -7,6 +7,9 @@ import axios from '~/api/axios';
 import { Navbar, Text, Input, Dropdown, Grid, User, Tooltip } from '@nextui-org/react';
 import { connect } from 'react-redux';
 
+import Login from '../../Auth/Login';
+import Register from '../../Auth/register';
+
 const MenuBarItem = [
     { key: 1, path: '/', name: 'Trang chủ' },
     { key: 2, path: '/admin/createproduct', name: 'Tạo sản phẩm' },
@@ -205,27 +208,8 @@ function Header(props) {
                     </>
                 ) : (
                     <>
-                        <Tooltip content={'Đăng nhập'} placement="bottom">
-                            <Navbar.Link
-                                as={Link}
-                                to="/login"
-                                color="inherit"
-                                isActive={path == '/login' ? true : false}
-                            >
-                                Đăng nhập
-                            </Navbar.Link>
-                        </Tooltip>
-                        <Tooltip content={'Đăng ký'} placement="bottom">
-                            <Navbar.Link
-                                as={Link}
-                                to="/register"
-                                auto="true"
-                                flat="true"
-                                isActive={path == '/register' ? true : false}
-                            >
-                                Đăng ký
-                            </Navbar.Link>
-                        </Tooltip>
+                        <Login />
+                        <Register />
                     </>
                 )}
             </Navbar.Content>

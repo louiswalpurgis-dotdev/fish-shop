@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as linkReact } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { Table, Avatar, Link, Button } from '@nextui-org/react';
 import axios from '~/api/axios';
 
 import { EyeIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -21,106 +22,60 @@ function ManageUser() {
     }, []);
 
     function handleDelete(user) {
-    const DELETE_USER_URL=`/account/${user.id}/delete`
-        axios.delete(DELETE_USER_URL,{
-            id:user.id
-        })
-        .then(window.location.reload())
-        .catch(err => console.log(err))
-    } 
+        const DELETE_USER_URL = `/account/${user.id}/delete`;
+        axios
+            .delete(DELETE_USER_URL, {
+                id: user.id,
+            })
+            .then(setUsers((users) => users.filter((item) => item.id !== user.id)))
+            .catch((err) => console.log(err));
+    }
     return (
-        <>
-            <div className="max-w-7xl mx-auto">
-                <div className="inline-block min-w-full py-2 align-middle">
-                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                        <table className="min-w-full divide-y divide-gray-300">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th
-                                        scope="col"
-                                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                    >
-                                        #
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
-                                    >
-                                        firstName
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900"
-                                    >
-                                        lastName
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                    >
-                                        username
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                    >
-                                        email
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                                    >
-                                        Ảnh đại diện
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="h-full px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                                    >
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 bg-white">
-                                {users.map((user, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-semibold text-gray-900 sm:pl-6">
-                                                {index}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                {user.firstName}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                {user.lastName}
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm">{user.username}</td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm">{user.email}</td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm flex justify-around items-center">
-                                                <img src={user.image} className="w-10 h-10 rounded-full" />
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-4 text-sm">
-                                                <div className="flex justify-around items-center">
-                                                    <Link to={`/profile/${user.username}`}>
-                                                        <EyeIcon className="h-6 w-6 hover:text-blue-500" />
-                                                    </Link>
-                                                    <button 
-                                                    onClick={() => handleDelete(user)}
-                                                    >
-                                                        <TrashIcon 
-                                                        className="h-6 w-6 text-blue-500"
-                                                     />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </>
+        <Table
+            aria-label="Quản lý người dùng."
+            css={{
+                height: 'auto',
+                minWidth: '100%',
+            }}
+            selectionMode="multiple"
+        >
+            <Table.Header>
+                <Table.Column>NAME</Table.Column>
+                <Table.Column>USERNAME</Table.Column>
+                <Table.Column>EMAIL</Table.Column>
+                <Table.Column>Avatar</Table.Column>
+                <Table.Column>Actions</Table.Column>
+            </Table.Header>
+            <Table.Body>
+                {users.map((user) => {
+                    return (
+                        <Table.Row key={user.id}>
+                            <Table.Cell>
+                                {user.firstName} {user.lastName}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {user.username}
+                            </Table.Cell>
+                            <Table.Cell>{user.email}</Table.Cell>
+                            <Table.Cell>
+                                <Avatar size="lg" src={user.image} zoomed />
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Link as={linkReact} to={`/profile/${user.username}`}>
+                                    <EyeIcon className="h-6 w-6 hover:text-blue-500" />
+                                </Link>
+                                <Button
+                                    auto
+                                    color="error"
+                                    icon={<TrashIcon className="h-6 w-6 text-blue-500" />}
+                                    onClick={() => handleDelete(user)}
+                                />
+                            </Table.Cell>
+                        </Table.Row>
+                    );
+                })}
+            </Table.Body>
+        </Table>
     );
 }
 
