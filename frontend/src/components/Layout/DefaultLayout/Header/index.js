@@ -1,5 +1,3 @@
-import lottie from 'lottie-web';
-import { defineElement } from 'lord-icon-element';
 import React, { useState, useEffect } from 'react';
 import { Link as reactLink, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
