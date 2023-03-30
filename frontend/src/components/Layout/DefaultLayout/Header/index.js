@@ -25,8 +25,6 @@ const menuItems = [
     { key: 4, path: '/', name: 'Delete File' },
 ];
 
-defineElement(lottie.loadAnimation);
-
 function Header(props) {
     const location = useLocation();
     const [cookie, setCookie] = useCookies(['cookie']);
