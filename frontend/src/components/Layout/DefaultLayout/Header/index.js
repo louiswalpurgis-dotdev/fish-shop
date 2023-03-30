@@ -1,10 +1,11 @@
 import lottie from 'lottie-web';
 import { defineElement } from 'lord-icon-element';
+import logo from '~/assets/logo.png';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from '~/api/axios';
-import { Navbar, Text, Input, Dropdown, Grid, User, Tooltip } from '@nextui-org/react';
+import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image } from '@nextui-org/react';
 import { connect } from 'react-redux';
 
 const MenuBarItem = [
@@ -16,10 +17,10 @@ const MenuBarItem = [
 const shoppingCardPage = '/cart';
 
 const menuItems = [
-    { key: 'new', name: 'New File' },
-    { key: 'copy', name: 'Copy Link' },
-    { key: 'edit', name: 'Edit File' },
-    { key: 'delete', name: 'Delete File' },
+    { key: 1, path: '/admin', name: 'Quản lý' },
+    { key: 2, path: '/', name: 'Copy Link' },
+    { key: 3, path: '/', name: 'Edit File' },
+    { key: 4, path: '/', name: 'Delete File' },
 ];
 
 defineElement(lottie.loadAnimation);
@@ -82,15 +83,15 @@ function Header(props) {
         //                     </span>
         //                 </NavLink>
         //                 {/* <icShoppingCard */
-        <Navbar variant="sticky">
+        <Navbar variant="sticky" css={{ paddingLeft: 0, paddingRight: 0 }}>
             <Navbar.Brand>
                 <Grid.Container gap={2}>
                     <Grid>
                         <Navbar.Content hideIn="xs">
                             <Tooltip content={'Trang chủ'} placement="bottom">
                                 <Navbar.Link as={Link} to="/">
-                                    <Text
-                                        h5
+                                    <Image src={logo} css={{ w: 80 }}></Image>
+                                    {/* <Text
                                         size={20}
                                         css={{
                                             textGradient: '45deg, $blue600 -20%, $pink600 50%',
@@ -98,7 +99,7 @@ function Header(props) {
                                         weight="bold"
                                     >
                                         Con cá
-                                    </Text>
+                                    </Text> */}
                                 </Navbar.Link>
                             </Tooltip>
                         </Navbar.Content>
@@ -108,8 +109,10 @@ function Header(props) {
                             <Dropdown.Button flat>Khám phá</Dropdown.Button>
                             <Dropdown.Menu items={menuItems}>
                                 {(item) => (
-                                    <Dropdown.Item key={item.key} color={item.key === 'delete' ? 'error' : 'default'}>
-                                        {item.name}
+                                    <Dropdown.Item key={item.key}>
+                                        <Link as={Link} to={item.path} isActive={path === item.path ? true : false}>
+                                            {item.name}
+                                        </Link>
                                     </Dropdown.Item>
                                 )}
                             </Dropdown.Menu>
@@ -130,6 +133,7 @@ function Header(props) {
             </Navbar.Brand>
             <Navbar.Content activeColor="primary" variant="highlight-rounded">
                 <Input clearable bordered placeholder="Tìm kiếm" value={query} onChange={handleChange} />
+
                 {/* <div className="absolute left-0 items-center max-h-60 overflow-y-auto bg-slate-50 text-black-100">
                     <ul className="items-center">
                         {state.query === ''
@@ -139,11 +143,11 @@ function Header(props) {
                                       <li
                                           key={item.id}
                                           onClick={() => {
-                                              setstate({
+                                              setState({
                                                   query: '',
                                                   list: products,
                                               });
-                                              setquery('');
+                                              setQuery('');
                                           }}
                                       >
                                           {' '}
@@ -153,15 +157,7 @@ function Header(props) {
                               })}
                     </ul>
                 </div> */}
-                {/* <Tooltip placement="Tạo">
-                    <Link as={Link} to={createProduct}>
-                        <lord-icon
-                            src="https://cdn.lordicon.com/ynwbvguu.json"
-                            trigger="hover"
-                            style={{ width: 1.5 + 'em', height: 1.5 + 'em' }}
-                        ></lord-icon>
-                    </Link>
-                </Tooltip> */}
+
                 <Tooltip content="Giỏ hàng" placement="bottom" className="mx-4">
                     <Link as={Link} to={shoppingCardPage}>
                         <lord-icon
@@ -193,7 +189,7 @@ function Header(props) {
                                 as={Link}
                                 to="/login"
                                 color="inherit"
-                                isActive={path == '/login' ? true : false}
+                                isActive={path === '/login' ? true : false}
                             >
                                 Đăng nhập
                             </Navbar.Link>
@@ -204,7 +200,7 @@ function Header(props) {
                                 to="/register"
                                 auto="true"
                                 flat="true"
-                                isActive={path == '/register' ? true : false}
+                                isActive={path === '/register' ? true : false}
                             >
                                 Đăng ký
                             </Navbar.Link>
