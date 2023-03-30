@@ -3,10 +3,10 @@ import Slide from '~/components/Layout/components/Slide/Slide';
 
 function Home() {
     return (
-        <>
+        <div>
             <Slide />
             <ProductCard />
-        </>
+        </div>
     );
 }
 
