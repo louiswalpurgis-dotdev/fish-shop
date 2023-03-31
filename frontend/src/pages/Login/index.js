@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { addUser } from '~/action/action';
 import axios from '~/api/axios';
+import { useCookies } from 'react-cookie';
 
 const LOGIN_URL = '/auth/login';
 
 function Login(props) {
+    const [accessToken, setAccessToken] = useCookies('cookie');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
@@ -26,6 +28,7 @@ function Login(props) {
                 setMsg(res.data.message);
                 if (!res.data.message) {
                     props.addUser(res.data.user);
+                    setAccessToken('access_token', res.data.access_token);
                     navigate(from, { replace: true });
                 }
             })

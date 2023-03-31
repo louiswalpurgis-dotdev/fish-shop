@@ -8,6 +8,7 @@ import { deleteUser } from '~/action/action';
 import Login from '../../Auth/Login';
 import Register from '../../Auth/register';
 import logo from '~/assets/logo.png';
+import { useCookies } from 'react-cookie';
 
 const MenuBarItem = [
     { key: 1, path: '/', name: 'Trang chủ' },
@@ -25,6 +26,7 @@ const menuItems = [
 ];
 
 function Header(props) {
+    const [cookie, setCookie, removeCookie] = useCookies('cookie');
     const { user } = props;
     const location = useLocation();
     const [userData, setUser] = useState();
@@ -59,6 +61,7 @@ function Header(props) {
 
     const handleLogout = () => {
         props.deleteUser(user);
+        removeCookie('access_token');
         SetIsLogin(false);
     };
     const handleChange = (e) => {

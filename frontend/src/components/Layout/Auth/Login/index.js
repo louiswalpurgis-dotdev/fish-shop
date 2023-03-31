@@ -4,9 +4,11 @@ import { AtSymbolIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import axios from '~/api/axios';
 import { connect } from 'react-redux';
 import { addUser } from '~/action/action';
+import { useCookies } from 'react-cookie';
 const LOGIN_URL = '/auth/login';
 
 function Login(props) {
+    const [accessToken, setaccessToken] = useCookies('cookie');
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [checked, setChecked] = useState(false);
@@ -44,6 +46,8 @@ function Login(props) {
                     }
                     if (!res.data.message) {
                         props.addUser(res.data.user);
+                        console.log(res.data);
+                        setaccessToken('access_token', res.data.access_token);
                         closeHandler();
                     }
                 })

@@ -14,7 +14,7 @@ function ManageUser() {
         axios
             .get(GET_USERS_URL, {
                 headers: {
-                    authorization: `Bearer ${cookie.accessToken}`,
+                    authorization: `Bearer ${cookie.access_token}`,
                 },
             })
             .then((data) => setUsers(data.data))
@@ -53,9 +53,7 @@ function ManageUser() {
                             <Table.Cell>
                                 {user.firstName} {user.lastName}
                             </Table.Cell>
-                            <Table.Cell>
-                                {user.username}
-                            </Table.Cell>
+                            <Table.Cell>{user.username}</Table.Cell>
                             <Table.Cell>{user.email}</Table.Cell>
                             <Table.Cell>
                                 <Avatar size="lg" src={user.image} zoomed />

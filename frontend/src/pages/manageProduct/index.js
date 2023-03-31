@@ -13,7 +13,7 @@ function ManagerProduct() {
         axios
             .get(GET_PRODUCTS_URL, {
                 headers: {
-                    authorization: `Bearer ${cookie.accessToken}`,
+                    authorization: `Bearer ${cookie.access_token}`,
                 },
             })
             .then((data) => setProducts(data.data))
