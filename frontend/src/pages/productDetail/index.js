@@ -3,13 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from '~/api/axios';
 import { connect } from 'react-redux';
 
-import { buyProduct } from '~/action/action'
+import { buyProduct } from '~/action/action';
 
 const StyleAmountCss =
     'flex items-center justify-center w-8 h-8 rounded-full text-[20px] text-white bg-violet-500 border-0  focus:outline-none hover:bg-violet-600';
 
 function ProductDetail(props) {
-
     const [product, setProduct] = useState([]);
 
     const { productId } = useParams();
@@ -53,7 +52,9 @@ function ProductDetail(props) {
                         <div className="flex">
                             <span className="title-font font-medium text-2xl text-gray-900">{product.price} đ</span>
                             <button
-                                onClick={() => props.buyProduct(product)}
+                                onClick={() => {
+                                    props.buyProduct(product);
+                                }}
                                 className="flex ml-auto text-white bg-violet-500 border-0 py-2 px-6 focus:outline-none hover:bg-violet-600 rounded"
                             >
                                 Thêm vào giỏ hàng
@@ -67,12 +68,12 @@ function ProductDetail(props) {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-      buyProduct: (product_current) => dispatch(buyProduct(product_current)),
+        buyProduct: (product_current) => dispatch(buyProduct(product_current)),
     };
-  };
-  const mapStateToProps = (state) => {
+};
+const mapStateToProps = (state) => {
     return {
-      cart: state.cart.cartAr,
+        cart: state.cart.cartAr,
     };
-  };
-  export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);

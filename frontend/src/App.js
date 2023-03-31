@@ -11,15 +11,15 @@ import RequireAuth from '~/components/RequireAuth';
 import Theme from './components/theme';
 
 const ROLES = {
-    user: 'false',
-    admin: 'true',
+    user: false,
+    admin: true,
 };
 function App() {
     return (
         <Router>
             <NextUIProvider theme={Theme()}>
                 <Provider store={store}>
-                    <PersistGate persistor={persistor}>
+                    <PersistGate persistor={persistor} loading={null}>
                         <div className="App">
                             <Routes>
                                 {publicRouters.map((route, index) => {

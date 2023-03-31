@@ -31,7 +31,7 @@ function ShoppingCart(props) {
             <ul className="flex flex-col divide-y divide-gray-300">
                 {/* ITEM */}
                 {products.map((product, index) => {
-                    product.quantity ? total += product.price * product.quantity : total += product.price;
+                    product.quantity ? (total += product.price * product.quantity) : (total += product.price);
                     return (
                         <li className="flex flex-col py-6 sm:flex-row sm:justify-between" key={index}>
                             {/* ITEM EDITOR */}
@@ -52,7 +52,10 @@ function ShoppingCart(props) {
                                             {product.quantity === undefined ? (
                                                 <p className="text-lg font-semibold">{product.price} đ</p>
                                             ) : (
-                                                <p className="text-lg font-semibold">{product.price} đ <span className='text-xs text-red-500'>{`x${product.quantity}`}</span></p>
+                                                <p className="text-lg font-semibold">
+                                                    {product.price} đ{' '}
+                                                    <span className="text-xs text-red-500">{`x${product.quantity}`}</span>
+                                                </p>
                                             )}
                                         </div>
                                         <div className="flex text-sm divide-x text-red-400 hover:text-red-600">
@@ -97,6 +100,7 @@ const mapStateToProps = (state) => {
     return {
         cart: state.cart.cartAr,
         total: state.cart.total,
+        user: state.user.user,
     };
 };
 const mapDispatchToProps = (dispatch) => {

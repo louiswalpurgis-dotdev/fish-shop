@@ -1,20 +1,19 @@
-import { useLocation, Navigate, Outlet } from "react-router-dom";
-import useAuth from "~/hooks/useAuth";
-import { useCookies } from 'react-cookie';
-
-const RequireAuth = ({ allowedRoles }) => {
-    const { auth } = useAuth();
+import { useLocation, Navigate, Outlet } from 'react-router-dom';
+import { connect } from 'react-redux';
+const RequireAuth = (props, { allowedRoles }) => {
+    const auth = props.user?.isAdmin;
     const location = useLocation();
-    const [cookie, setCookie] = useCookies(['cookie']);
-    return (
-        auth?.roles === allowedRoles 
-        || cookie.roles === allowedRoles
-        || cookie.roles === "true"
-            ? <Outlet />
-            : auth?.accessToken
-                ? <Navigate to="/unauthorized" state={{ from: location }} replace />
-                : <Navigate to="/login" state={{ from: location }} replace />
+    return auth !== undefined && auth?.roles === allowedRoles ? (
+        <Outlet />
+    ) : auth?.accessToken ? (
+        <Navigate to="/unauthorized" state={{ from: location }} replace />
+    ) : (
+        <Navigate to="/login" state={{ from: location }} replace />
     );
-}
-
-export default RequireAuth;
+};
+const mapStateToProps = (state) => {
+    return {
+        user: state.user.user,
+    };
+};
+export default connect(mapStateToProps, {})(RequireAuth);

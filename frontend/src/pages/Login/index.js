@@ -1,24 +1,19 @@
-import { Link,useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
-
-import useAuth from '~/hooks/useAuth';
+import { connect } from 'react-redux';
+import { addUser } from '~/action/action';
 import axios from '~/api/axios';
 
 const LOGIN_URL = '/auth/login';
 
-function Login() {
-    const [accessToken, setAccessToken] = useCookies(['accessToken']);
-    const [userame, setUseranme] = useCookies(['username']);
-    const [roles, setRoles] = useCookies(['roles']);
-    const { setAuth } = useAuth();
+function Login(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
 
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const from = location.state?.from?.pathname || '/';
 
     function handleLogin(event) {
         event.preventDefault();
@@ -29,28 +24,18 @@ function Login() {
             })
             .then((res) => {
                 setMsg(res.data.message);
-                if(!res.data.message) {
-                    const accessToken = res.data.access_token;
-                    const roles = res?.data?.user?.isAdmin;
-                    const username = res?.data?.user?.username;
-                    const email = res?.data?.user?.email;
-                    const password = res?.data?.user?.password;
-
-
-                    setAccessToken('accessToken', accessToken, { path: '/' });
-                    setRoles('roles', roles, { path: '/' });
-                    setUseranme('username',username,{ path: '/' });
-                    setAuth({ email, password, roles, accessToken });
+                if (!res.data.message) {
+                    props.addUser(res.data.user);
                     navigate(from, { replace: true });
                 }
             })
             .catch((error) => console.log(error));
     }
     useEffect(() => {
-        if(accessToken && accessToken.accessToken) {
-            navigate("/",{ replace: true });
+        if (props.user?.username && props.user !== undefined) {
+            navigate('/', { replace: true });
         }
-    }, [])
+    }, [props.user]);
     return (
         <div className="mt-28 flex flex-col mx-auto max-w-md p-6 rounded-md sm:p-10 dark:bg-gray-900 dark:text-gray-100 shadow-[0px_5px_24px_rgba(0,_0,_0,_0.16),_0px_2px_6px_rgba(0,_0,_0,_0.04),_0px_0px_1px_rgba(0,_0,_0,_0.04)]">
             <div className="mb-8 text-center">
@@ -116,5 +101,14 @@ function Login() {
         </div>
     );
 }
-
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addUser: (user_current) => dispatch(addUser(user_current)),
+    };
+};
+const mapStateToProps = (state) => {
+    return {
+        user: state.user.user,
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

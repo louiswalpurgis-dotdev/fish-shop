@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link as reactLink, useLocation } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import axios from '~/api/axios';
-import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image, Link } from '@nextui-org/react';
+import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image, Link, Text, Button } from '@nextui-org/react';
 import { connect } from 'react-redux';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-
+import { deleteUser } from '~/action/action';
 import Login from '../../Auth/Login';
 import Register from '../../Auth/register';
 import logo from '~/assets/logo.png';
@@ -26,8 +25,10 @@ const menuItems = [
 ];
 
 function Header(props) {
+    const { user } = props;
     const location = useLocation();
-    const [cookie, setCookie] = useCookies(['cookie']);
+    const [userData, setUser] = useState();
+    const [isLogin, SetIsLogin] = useState(false);
     const [path, setPath] = useState('');
     const carts = props.cart.length;
     const GET_PRODUCT_URL = '/';
@@ -40,15 +41,26 @@ function Header(props) {
     });
 
     useEffect(() => {
+        if (user?.username) {
+            SetIsLogin(true);
+            setUser(user);
+        } else {
+            SetIsLogin(false);
+            setUser(null);
+        }
         axios.get(GET_PRODUCT_URL).then((response) => {
             setProducts(response.data);
         });
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         setPath(location.pathname);
     }, [location.pathname]);
 
+    const handleLogout = () => {
+        props.deleteUser(user);
+        SetIsLogin(false);
+    };
     const handleChange = (e) => {
         const results = products.filter((product) => {
             if (e.target.value === '') return products;
@@ -63,26 +75,6 @@ function Header(props) {
     };
 
     return (
-        //                 {/* icSearchMobile */}
-        //                 <NavLink
-        //                     to={SearchPage}
-        //                     className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-        //                 >
-        //                     <SearchMobileIcon />
-        //                 </NavLink>
-        //                 {/* <icSearchMobile */}
-
-        //                 {/* icShoppingCard */}
-        //                 <NavLink
-        //                     to={ShoppingCardPage}
-        //                     className="relative inline-flex items-center p-3 ml-1 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-        //                 >
-        //                     <ShoppingCardIcon />
-        //                     <span className="absolute top-1 right-1 w-3 h-3 flex items-center justify-center text-[8px] rounded-full text-white bg-red-500">
-        //                         {carts}
-        //                     </span>
-        //                 </NavLink>
-        //                 {/* <icShoppingCard */
         <Navbar isBordered variant="floating" css={{ paddingLeft: 0, paddingRight: 0 }}>
             <Navbar.Brand>
                 <Grid.Container gap={2}>
@@ -91,7 +83,7 @@ function Header(props) {
                             <Tooltip content={'Trang chủ'} placement="bottom">
                                 <Navbar.Link as={reactLink} to="/">
                                     <Image src={logo} css={{ w: 80 }}></Image>
-                                    {/* <Text
+                                    <Text
                                         size={20}
                                         css={{
                                             textGradient: '45deg, $blue600 -20%, $pink600 50%',
@@ -99,14 +91,16 @@ function Header(props) {
                                         weight="bold"
                                     >
                                         Con cá
-                                    </Text> */}
+                                    </Text>
                                 </Navbar.Link>
                             </Tooltip>
                         </Navbar.Content>
                     </Grid>
                     <Grid>
                         <Dropdown>
-                            <Dropdown.Button flat>Khám phá</Dropdown.Button>
+                            <Dropdown.Button aria-label="Khám phá" flat>
+                                Khám phá
+                            </Dropdown.Button>
                             <Dropdown.Menu items={menuItems}>
                                 {(item) => (
                                     <Dropdown.Item key={item.key}>
@@ -175,21 +169,21 @@ function Header(props) {
                     </span>
                 </Tooltip>
 
-                {cookie.username ? (
-                    <>
-                        <User src="https://i.pravatar.cc/150?u=a042581f4e29026704d" name="Ariana Wattson" zoomed>
-                            <User.Link as={reactLink} to={`/profile/${cookie.username}`} target="_self">
-                                {cookie.username}
-                            </User.Link>
-                        </User>
-                        <Navbar.Link as={reactLink} to="/logout" auto="true" flat="true" isActive variant="highlight">
-                            Đăng xuất
-                        </Navbar.Link>
-                    </>
-                ) : (
+                {isLogin === false ? (
                     <>
                         <Login />
                         <Register />
+                    </>
+                ) : (
+                    <>
+                        <User src={user.image} name={user.firstName + ' ' + user.lastName} zoomed>
+                            <User.Link as={reactLink} to={`/profile/${user.username}`} target="_self">
+                                {user.username}
+                            </User.Link>
+                        </User>
+                        <Button auto onPress={handleLogout} light>
+                            Đăng xuất
+                        </Button>
                     </>
                 )}
             </Navbar.Content>
@@ -200,6 +194,12 @@ const mapStateToProps = (state) => {
     return {
         cart: state.cart.cartAr,
         total: state.cart.total,
+        user: state.user.user,
     };
 };
-export default connect(mapStateToProps, {})(Header);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deleteUser: (user_current) => dispatch(deleteUser(user_current)),
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

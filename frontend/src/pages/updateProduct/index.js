@@ -27,7 +27,7 @@ function UpdateProduct() {
             setInfo(data.info);
             setDefaultImage(data.image);
         });
-    }, []);
+    }, [GET_ONE_PRODUCT_URL]);
 
     function handleUpdateProduct(e) {
         e.preventDefault();

@@ -1,12 +1,45 @@
-import { Modal, Input, Row, Checkbox, Button, Text, css } from '@nextui-org/react';
+import { Modal, Input, Button, Text, Loading } from '@nextui-org/react';
 import { useState } from 'react';
 import { AtSymbolIcon, LockClosedIcon, UserIcon, IdentificationIcon } from '@heroicons/react/24/solid';
+import axios from '~/api/axios';
 
+const REGISTER_URL = '/auth/register';
 export default function Register() {
     const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [msg, setMsg] = useState('');
     const handler = () => setVisible(true);
     const closeHandler = () => {
         setVisible(false);
+    };
+    const handleRegister = () => {
+        try {
+            setLoading(true);
+            axios
+                .post(REGISTER_URL, {
+                    firstName: firstName,
+                    lastName: lastName,
+                    username: username,
+                    email: email,
+                    password: password,
+                })
+                .then((res) => {
+                    setMsg(res.data.message);
+                    setLoading(false);
+                    if (!res.data.message) {
+                        closeHandler();
+                    }
+                });
+        } catch (error) {
+            setLoading(true);
+            setMsg('Đã xuất hiện lỗi! Hãy thử lại');
+            console.log(error);
+        }
     };
     return (
         <div>
@@ -17,10 +50,13 @@ export default function Register() {
                 <Modal.Header>
                     <Text id="modal-title" size={18}>
                         Đăng ký
+                        <Text color="error">{msg}</Text>
                     </Text>
                 </Modal.Header>
                 <Modal.Body>
                     <Input
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                         clearable
                         bordered
                         fullWidth
@@ -30,6 +66,8 @@ export default function Register() {
                         contentLeft={<UserIcon fill="currentColor" className="h-24 w-24" />}
                     />
                     <Input
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         clearable
                         bordered
                         fullWidth
@@ -39,6 +77,8 @@ export default function Register() {
                         contentLeft={<UserIcon fill="currentColor" className="h-24 w-24" />}
                     />
                     <Input
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         clearable
                         bordered
                         fullWidth
@@ -48,6 +88,8 @@ export default function Register() {
                         contentLeft={<IdentificationIcon fill="currentColor" className="h-24 w-24" />}
                     />
                     <Input
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         clearable
                         bordered
                         fullWidth
@@ -56,8 +98,9 @@ export default function Register() {
                         placeholder="Email"
                         contentLeft={<AtSymbolIcon fill="currentColor" className="h-24 w-24" />}
                     />
-                    <Input
-                        clearable
+                    <Input.Password
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         bordered
                         fullWidth
                         color="primary"
@@ -70,8 +113,8 @@ export default function Register() {
                     <Button auto flat color="error" onPress={closeHandler}>
                         Đóng
                     </Button>
-                    <Button auto onPress={closeHandler}>
-                        Đăng ký
+                    <Button auto onPress={handleRegister}>
+                        {(loading && <Loading type="gradient" />) || 'Đăng ký'}
                     </Button>
                 </Modal.Footer>
             </Modal>

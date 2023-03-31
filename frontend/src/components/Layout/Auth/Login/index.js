@@ -1,66 +1,77 @@
-import { Modal, Input, Row, Checkbox, Button, Text } from '@nextui-org/react';
-import { useState } from 'react';
-import { useCookies } from 'react-cookie';
+import { Modal, Input, Row, Checkbox, Button, Text, Loading } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
 import { AtSymbolIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import axios from '~/api/axios';
-
-import useAuth from '~/hooks/useAuth';
+import { connect } from 'react-redux';
+import { addUser } from '~/action/action';
 const LOGIN_URL = '/auth/login';
 
-export default function Login() {
+function Login(props) {
     const [visible, setVisible] = useState(false);
-    const handler = () => setVisible(true);
-    const closeHandler = () => {
-        setVisible(false);
-    };
-
-    const [accessToken, setAccessToken] = useCookies(['accessToken']);
-    const [userame, setUseranme] = useCookies(['username']);
-    const [roles, setRoles] = useCookies(['roles']);
-    const { setAuth } = useAuth();
+    const [loading, setLoading] = useState(false);
+    const [checked, setChecked] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
 
-    function handleLogin() {
-        axios
-            .post(LOGIN_URL, {
-                email: email,
-                password: password,
-            })
-            .then((res) => {
-                setMsg(res.data.message);
-                if (!res.data.message) {
-                    const accessToken = res.data.access_token;
-                    const roles = res?.data?.user?.isAdmin;
-                    const username = res?.data?.user?.username;
-                    const email = res?.data?.user?.email;
-                    const password = res?.data?.user?.password;
+    useEffect(() => {
+        if (localStorage.checkbox && localStorage.checkbox !== '') {
+            setChecked(true);
+            setEmail(localStorage.email);
+            setPassword(localStorage.password);
+        }
+    }, []);
 
-                    setAccessToken('accessToken', accessToken, { path: '/' });
-                    setRoles('roles', roles, { path: '/' });
-                    setUseranme('username', username, { path: '/' });
-                    setAuth({ email, password, roles, accessToken });
-                    closeHandler();
-                }
-            })
-            .catch((error) => console.log(error));
+    const handler = () => setVisible(true);
+    const closeHandler = () => {
+        setVisible(false);
+    };
+    function handleLogin() {
+        try {
+            setLoading(true);
+            axios
+                .post(LOGIN_URL, {
+                    email: email,
+                    password: password,
+                })
+                .then((res) => {
+                    setMsg(res.data.message);
+                    setLoading(false);
+                    if (checked) {
+                        localStorage.email = email;
+                        localStorage.password = password;
+                        localStorage.checkbox = true;
+                    }
+                    if (!res.data.message) {
+                        props.addUser(res.data.user);
+                        closeHandler();
+                    }
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    setMsg(error);
+                });
+        } catch (error) {
+            setLoading(false);
+            setMsg('Đã có lỗi xảy ra! Hãy thử lại.');
+        }
     }
     return (
         <div>
-            <Button auto onPress={handler} light>
+            <Button auto onPress={handler} light aria-label="Đăng nhập">
                 Đăng nhập
             </Button>
             <Modal closeButton blur aria-labelledby="modal-title" open={visible} onClose={closeHandler}>
                 <Modal.Header>
                     <Text id="modal-title" size={18}>
                         Đăng nhập
+                        <Text color="error">{msg}</Text>
                     </Text>
-                    {msg}
                 </Modal.Header>
                 <Modal.Body>
                     <Input
                         value={email}
+                        type="email"
                         onChange={(e) => setEmail(e.target.value)}
                         clearable
                         bordered
@@ -70,10 +81,10 @@ export default function Login() {
                         placeholder="Email"
                         contentLeft={<AtSymbolIcon fill="currentColor" className="h-24 w-24" />}
                     />
-                    <Input
+                    <Input.Password
                         value={password}
+                        type="password"
                         onChange={(e) => setPassword(e.target.value)}
-                        clearable
                         bordered
                         fullWidth
                         color="primary"
@@ -82,26 +93,39 @@ export default function Login() {
                         contentLeft={<LockClosedIcon fill="currentColor" className="h-24 w-24" />}
                     />
                     <Row justify="space-between">
-                        <Checkbox>
+                        <Checkbox isSelected={checked} onChange={setChecked}>
                             <Text size={14}>Nhớ tài khoản</Text>
                         </Checkbox>
                         <Text size={14}>Quên mật khẩu?</Text>
                     </Row>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button auto flat color="error" onPress={closeHandler}>
+                    <Button auto ghost color="error" onPress={closeHandler}>
                         Đóng
                     </Button>
                     <Button
                         auto
+                        ghost
                         onPress={() => {
                             handleLogin();
                         }}
                     >
-                        Đăng nhập
+                        {(loading && <Loading type="gradient" />) || 'Đăng nhập'}
                     </Button>
                 </Modal.Footer>
             </Modal>
         </div>
     );
 }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addUser: (user_current) => dispatch(addUser(user_current)),
+    };
+};
+const mapStateToProps = (state) => {
+    return {
+        user: state.user.user,
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
