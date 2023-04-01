@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link as reactLink, useLocation } from 'react-router-dom';
-import axios from '~/api/axios';
 import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image, Link, Text, Button } from '@nextui-org/react';
 import { connect } from 'react-redux';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
@@ -9,6 +8,7 @@ import Login from '../../Auth/Login';
 import Register from '../../Auth/register';
 import logo from '~/assets/logo.png';
 import { useCookies } from 'react-cookie';
+import Search from '../../components/Search/Search';
 
 const MenuBarItem = [
     { key: 1, path: '/', name: 'Trang chủ' },
@@ -33,14 +33,6 @@ function Header(props) {
     const [isLogin, SetIsLogin] = useState(false);
     const [path, setPath] = useState('');
     const carts = props.cart.length;
-    const GET_PRODUCT_URL = '/';
-
-    const [query, setQuery] = useState('');
-    const [products, setProducts] = useState([]);
-    const [state, setState] = useState({
-        query: '',
-        list: [],
-    });
 
     useEffect(() => {
         if (user?.username) {
@@ -50,9 +42,6 @@ function Header(props) {
             SetIsLogin(false);
             setUser(null);
         }
-        axios.get(GET_PRODUCT_URL).then((response) => {
-            setProducts(response.data);
-        });
     }, [user]);
 
     useEffect(() => {
@@ -64,21 +53,9 @@ function Header(props) {
         removeCookie('access_token');
         SetIsLogin(false);
     };
-    const handleChange = (e) => {
-        const results = products.filter((product) => {
-            if (e.target.value === '') return products;
-            return product.name.toLowerCase().includes(e.target.value.toLowerCase());
-        });
-
-        setQuery(e.target.value);
-        setState({
-            query: e.target.value,
-            list: results,
-        });
-    };
 
     return (
-        <Navbar isBordered variant="floating" css={{ paddingLeft: 0, paddingRight: 0 }}>
+        <Navbar isBordered variant='floating' shouldHideOnScroll>
             <Navbar.Brand>
                 <Grid.Container gap={2}>
                     <Grid>
@@ -137,31 +114,9 @@ function Header(props) {
                 </Grid.Container>
             </Navbar.Brand>
             <Navbar.Content activeColor="primary" variant="highlight-rounded">
-                <Input clearable bordered placeholder="Tìm kiếm" value={query} onChange={handleChange} />
-
-                {/* <div className="absolute left-0 items-center max-h-60 overflow-y-auto bg-slate-50 text-black-100">
-                    <ul className="items-center">
-                        {state.query === ''
-                            ? ''
-                            : state.list.map((item) => {
-                                  return (
-                                      <li
-                                          key={item.id}
-                                          onClick={() => {
-                                              setState({
-                                                  query: '',
-                                                  list: products,
-                                              });
-                                              setQuery('');
-                                          }}
-                                      >
-                                          {' '}
-                                          <NavLink to={`/product/${item.slug}`}>{item.name}</NavLink>{' '}
-                                      </li>
-                                  );
-                              })}
-                    </ul>
-                </div> */}
+                <Tooltip content="Tìm kiếm" placement='bottom' className='mx-4'>
+                    <Search />
+                </Tooltip>
 
                 <Tooltip content="Giỏ hàng" placement="bottom" className="mx-4">
                     <Link as={reactLink} to={shoppingCardPage}>
