@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 import { useCookies } from 'react-cookie';
 import axios from '~/api/axios';
+import { ValidateRegister } from '~/components/Validate';
 const REGISTER_URL = '/auth/register';
 
 function Register() {
@@ -25,7 +26,11 @@ function Register() {
 
     function handleRegister(event) {
         event.preventDefault();
-
+        const result = ValidateRegister({ firstName, lastName, username, email, password });
+        if (result || result !== '') {
+            setMsg(result);
+            return;
+        }
         axios
             .post(REGISTER_URL, {
                 firstName: firstName,

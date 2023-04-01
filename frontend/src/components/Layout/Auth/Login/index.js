@@ -5,6 +5,7 @@ import axios from '~/api/axios';
 import { connect } from 'react-redux';
 import { addUser } from '~/action/action';
 import { useCookies } from 'react-cookie';
+import { ValidateLogin } from '~/components/Validate';
 const LOGIN_URL = '/auth/login';
 
 function Login(props) {
@@ -26,9 +27,15 @@ function Login(props) {
 
     const handler = () => setVisible(true);
     const closeHandler = () => {
+        setMsg('');
         setVisible(false);
     };
     function handleLogin() {
+        const result = ValidateLogin({ email, password });
+        if (result || result !== '') {
+            setMsg(result);
+            return;
+        }
         try {
             setLoading(true);
             axios
@@ -46,7 +53,6 @@ function Login(props) {
                     }
                     if (!res.data.message) {
                         props.addUser(res.data.user);
-                        console.log(res.data);
                         setaccessToken('access_token', res.data.access_token);
                         closeHandler();
                     }

@@ -26,7 +26,14 @@ export default function Search() {
             list: results,
         });
     };
-
+    const closeHandler = () => {
+        setState({
+            query: '',
+            list: products,
+        });
+        setQuery('');
+        setVisible(false);
+    };
     useEffect(() => {
         axios.get(GET_PRODUCT_URL).then((response) => {
             setProducts(response.data);
@@ -35,7 +42,7 @@ export default function Search() {
     return (
         <div>
             <Button light auto onPress={() => setVisible(true)}>
-                <MagnifyingGlassCircleIcon style={{ width: 2 + 'em', height: 2 + 'em', color: 'black' }} />
+                <MagnifyingGlassCircleIcon style={{ width: 2 + 'em', height: 2 + 'em', color: '$darkText' }} />
             </Button>
             <Modal
                 scroll
@@ -45,27 +52,33 @@ export default function Search() {
                 {...bindings}
             >
                 <Modal.Header>
-                    <Input clearable underlined fullWidth labelLeft={
-                        <MagnifyingGlassIcon  style={{ width: 1 + 'em', height: 1 + 'em', color: 'black' }}/>
-                    }  value={query} onChange={handleChange} />
+                    <Input
+                        clearable
+                        underlined
+                        fullWidth
+                        labelLeft={
+                            <MagnifyingGlassIcon style={{ width: 1 + 'em', height: 1 + 'em', color: 'black' }} />
+                        }
+                        value={query}
+                        onChange={handleChange}
+                    />
                 </Modal.Header>
                 <Modal.Body>
                     {state.query === ''
-                        ? ''
-                        : state.list.map((item) => {
+                        ? products.slice(0, 5).map((product) => {
                               return (
                                   <NavLink
-                                      key={item.id}
-                                      to={`/product/${item.slug}`}
-                                      onClick={() => {
-                                          setState({
-                                              query: '',
-                                              list: products,
-                                          });
-                                          setQuery('');
-                                          setVisible(false);
-                                      }}
+                                      key={product.id}
+                                      to={`/product/${product.slug}`}
+                                      onClick={() => closeHandler()}
                                   >
+                                      <Text>{product.name}</Text>
+                                  </NavLink>
+                              );
+                          })
+                        : state.list.map((item) => {
+                              return (
+                                  <NavLink key={item.id} to={`/product/${item.slug}`} onClick={() => closeHandler()}>
                                       <Text>{item.name}</Text>
                                   </NavLink>
                               );

@@ -1,6 +1,6 @@
 import { createTheme } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
-function setItemWithEvent(key, value) {
+export function setItemWithEvent(key, value) {
     // Create a new event with the key and value as properties
     const event = new Event('itemSet');
     event.key = key;
@@ -31,7 +31,7 @@ export default function Theme() {
                 colors: {
                     text: '#fff',
                     background: '#1d1d1d',
-                    myDarkColor: '#ff4ecd',
+                    darkText: '#fff',
                 }, // optional
             },
         });
@@ -39,7 +39,9 @@ export default function Theme() {
         return createTheme({
             type: 'light',
             theme: {
-                colors: {}, // optional
+                colors: {
+                    darkText: '#11181c',
+                }, // optional
             },
         });
     }

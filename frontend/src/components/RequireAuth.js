@@ -1,11 +1,11 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
 import { connect } from 'react-redux';
-const RequireAuth = (props, { allowedRoles }) => {
-    const auth = props.user?.isAdmin;
+const RequireAuth = ({ allowedRoles,user }) => {
+    const auth = user?.isAdmin;
     const location = useLocation();
-    return auth !== undefined && auth?.roles === allowedRoles ? (
+    return auth !== undefined && auth === allowedRoles || auth === true ? (
         <Outlet />
-    ) : auth?.accessToken ? (
+    ) : auth == false ? (
         <Navigate to="/unauthorized" state={{ from: location }} replace />
     ) : (
         <Navigate to="/login" state={{ from: location }} replace />

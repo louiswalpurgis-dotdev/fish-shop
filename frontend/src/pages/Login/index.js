@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { addUser } from '~/action/action';
 import axios from '~/api/axios';
 import { useCookies } from 'react-cookie';
+import { ValidateLogin } from '~/components/Validate';
 
 const LOGIN_URL = '/auth/login';
 
@@ -19,6 +20,11 @@ function Login(props) {
 
     function handleLogin(event) {
         event.preventDefault();
+        const result = ValidateLogin({ email, password });
+        if (result || result !== '') {
+            setMsg(result);
+            return;
+        }
         axios
             .post(LOGIN_URL, {
                 email: email,

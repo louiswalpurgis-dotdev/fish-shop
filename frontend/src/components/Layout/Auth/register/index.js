@@ -2,6 +2,7 @@ import { Modal, Input, Button, Text, Loading } from '@nextui-org/react';
 import { useState } from 'react';
 import { AtSymbolIcon, LockClosedIcon, UserIcon, IdentificationIcon } from '@heroicons/react/24/solid';
 import axios from '~/api/axios';
+import { ValidateRegister } from '~/components/Validate';
 
 const REGISTER_URL = '/auth/register';
 export default function Register() {
@@ -18,8 +19,14 @@ export default function Register() {
         setVisible(false);
     };
     const handleRegister = () => {
+        setLoading(true);
+        const result = ValidateRegister({ firstName, lastName, username, email, password });
+        if (result || result !== '') {
+            setMsg(result);
+            setLoading(false);
+            return;
+        }
         try {
-            setLoading(true);
             axios
                 .post(REGISTER_URL, {
                     firstName: firstName,
