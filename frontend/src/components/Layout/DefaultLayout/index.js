@@ -1,11 +1,11 @@
-import Footer from "./Footer";
-import Header from "./Header";
+import Footer from './Footer';
+import Header from './Header';
 
 function DefaultLayout({ children }) {
     return (
         <div>
             <Header />
-            <div>{children}</div>
+            <div className="mx-[5%] my-[2%]">{children}</div>
             <Footer />
         </div>
     );
