@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link as reactLink, useLocation } from 'react-router-dom';
 import axios from '~/api/axios';
-import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image, Link, Text, Button } from '@nextui-org/react';
+import { Navbar, Dropdown, Grid, User, Tooltip, Input, Image, Link, Text, Button, Switch } from '@nextui-org/react';
 import { connect } from 'react-redux';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { deleteUser } from '~/action/action';
@@ -19,10 +19,9 @@ const MenuBarItem = [
 const shoppingCardPage = '/cart';
 
 const menuItems = [
-    { key: 1, path: '/admin', name: 'Quản lý' },
-    { key: 2, path: '/', name: 'Copy Link' },
-    { key: 3, path: '/', name: 'Edit File' },
-    { key: 4, path: '/', name: 'Delete File' },
+    { key: 1, path: '/', name: 'Copy Link' },
+    { key: 2, path: '/', name: 'Edit File' },
+    { key: 3, path: '/', name: 'Delete File' },
 ];
 
 function Header(props) {
@@ -107,6 +106,7 @@ function Header(props) {
                             <Dropdown.Menu items={menuItems}>
                                 {(item) => (
                                     <Dropdown.Item key={item.key}>
+                                        {item.switch}
                                         <Link
                                             as={reactLink}
                                             to={item.path}
