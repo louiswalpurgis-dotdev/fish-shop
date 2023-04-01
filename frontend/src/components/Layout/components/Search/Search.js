@@ -1,6 +1,6 @@
-import { Modal, useModal, Button, Text, Input, Link } from '@nextui-org/react';
-import { MagnifyingGlassCircleIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState, Link as reactLink } from 'react';
+import { Modal, useModal, Button, Text, Input } from '@nextui-org/react';
+import { MagnifyingGlassCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from '~/api/axios';
 
@@ -45,7 +45,9 @@ export default function Search() {
                 {...bindings}
             >
                 <Modal.Header>
-                    <Input clearable bordered placeholder="Tìm kiếm" value={query} onChange={handleChange} />
+                    <Input clearable underlined fullWidth labelLeft={
+                        <MagnifyingGlassIcon  style={{ width: 1 + 'em', height: 1 + 'em', color: 'black' }}/>
+                    }  value={query} onChange={handleChange} />
                 </Modal.Header>
                 <Modal.Body>
                     {state.query === ''
