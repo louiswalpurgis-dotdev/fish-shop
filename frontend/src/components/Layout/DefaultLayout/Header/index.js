@@ -114,7 +114,9 @@ function Header(props) {
 
                 <Tooltip content="Giỏ hàng" placement="bottom">
                     <Link as={reactLink} to={shoppingCardPage}>
-                        <ShoppingCartIcon style={{ width: 2 + 'em', height: 2 + 'em', color: '$darkText' }} />
+                        <Text span>
+                            <ShoppingCartIcon style={{ width: 2 + 'em', height: 2 + 'em', color: '$darkText' }} />
+                        </Text>
                     </Link>
                     <span className="w-3 h-3 flex items-center justify-center text-[8px] rounded-full text-white bg-red-500">
                         {carts}

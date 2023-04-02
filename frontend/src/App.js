@@ -16,10 +16,10 @@ const ROLES = {
 };
 function App() {
     return (
-        <Router>
-            <NextUIProvider theme={Theme()}>
-                <Provider store={store}>
-                    <PersistGate persistor={persistor} loading={null}>
+        <NextUIProvider theme={Theme()}>
+            <Provider store={store}>
+                <PersistGate persistor={persistor} loading={null}>
+                    <Router>
                         <div className="App">
                             <Routes>
                                 {publicRouters.map((route, index) => {
@@ -67,10 +67,10 @@ function App() {
                                 })}
                             </Routes>
                         </div>
-                    </PersistGate>
-                </Provider>
-            </NextUIProvider>
-        </Router>
+                    </Router>
+                </PersistGate>
+            </Provider>
+        </NextUIProvider>
     );
 }
 
