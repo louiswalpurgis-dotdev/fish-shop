@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from '~/api/axios';
 import { useParams, Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import { connect } from 'react-redux';
 
-function Profile() {
+function Profile({ user }) {
     const { username } = useParams();
     const GET_USER_URL = `/profile/${username}`;
     const UPDATE_USER_URL = `/account/${username}/update`;
-    const [cookie, setCookie] = useCookies(['cookie']);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -18,18 +17,18 @@ function Profile() {
     const [edit, setEdit] = useState(false);
 
     useEffect(() => {
-        axios.get(GET_USER_URL).then((user) => {
-            const data = user.data;
+        axios.get(GET_USER_URL).then((userdATA) => {
+            const data = userdATA.data;
             setFirstName(data.firstName);
             setLastName(data.lastName);
             setUname(data.username);
             setEmail(data.email);
             setImage(data.image);
-            if (data.username === cookie.username) {
+            if (data.username === user.username) {
                 setEdit(true);
             }
         });
-    }, []);
+    }, [user.username]);
 
     function handleUpdateUser(e) {
         e.preventDefault();
@@ -211,4 +210,9 @@ function Profile() {
     );
 }
 
-export default Profile;
+const mapStateToProps = (state) => {
+    return {
+        user: state.user.user,
+    };
+};
+export default connect(mapStateToProps, {})(Profile);
