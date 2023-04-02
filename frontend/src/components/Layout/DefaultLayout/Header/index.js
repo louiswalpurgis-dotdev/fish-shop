@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link as reactLink, useLocation } from 'react-router-dom';
-import { Navbar, Grid, User, Tooltip, Image, Link, Text, Button, Switch } from '@nextui-org/react';
+import { Navbar, Grid, User, Tooltip, Image, Link, Text, Button, Switch, Dropdown } from '@nextui-org/react';
 import { connect } from 'react-redux';
 import { ShoppingCartIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import { deleteUser } from '~/action/action';
@@ -65,7 +65,7 @@ function Header(props) {
             <Navbar.Brand>
                 <Grid.Container gap={2}>
                     <Grid>
-                        <Navbar.Content hideIn="xs">
+                        <Navbar.Content>
                             <Tooltip content={'Trang chủ'} placement="bottom">
                                 <Navbar.Link as={reactLink} to="/">
                                     <Image src={logo} css={{ w: 80 }}></Image>
@@ -84,11 +84,18 @@ function Header(props) {
                     </Grid>
                     <Grid>
                         <Navbar.Content hideIn="xs">
-                            <Switch checked={theme == 'dark' ? false : true} size="lg" iconOn={<SunIcon />} iconOff={<MoonIcon />} onChange={handleChangeTheme} />
+                            <Switch
+                                checked={theme === 'dark' ? false : true}
+                                size="lg"
+                                iconOn={<SunIcon />}
+                                iconOff={<MoonIcon />}
+                                onChange={handleChangeTheme}
+                            />
                             {MenuBarItem.map((item) => (
                                 <Tooltip content={item.name} placement="bottom" key={item.key}>
                                     <Navbar.Link
-                                    as={reactLink}
+                                        hideIn="md"
+                                        as={reactLink}
                                         to={item.path}
                                         isActive={path === item.path ? true : false}
                                     >
@@ -107,7 +114,7 @@ function Header(props) {
 
                 <Tooltip content="Giỏ hàng" placement="bottom">
                     <Link as={reactLink} to={shoppingCardPage}>
-                        <ShoppingCartIcon style={{ width: 2 + 'em', height: 2 + 'em', color: theme === 'light' ? 'black': 'white'}} />
+                        <ShoppingCartIcon style={{ width: 2 + 'em', height: 2 + 'em', color: '$darkText' }} />
                     </Link>
                     <span className="w-3 h-3 flex items-center justify-center text-[8px] rounded-full text-white bg-red-500">
                         {carts}
@@ -127,7 +134,20 @@ function Header(props) {
                             </User.Link>
                         </User>
                         <Button auto onPress={handleLogout} light>
-                            Đăng xuất
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="w-6 h-6"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                                />
+                            </svg>
                         </Button>
                     </>
                 )}
