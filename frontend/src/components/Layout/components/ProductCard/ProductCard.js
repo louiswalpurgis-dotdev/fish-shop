@@ -49,15 +49,26 @@ function ProductCard() {
                 <Card>
                     <Card.Header css={{ position: 'absolute', zIndex: 1, top: 5 }}>
                         <Col>
-                            <Text
-                                span
-                                size={12}
-                                weight="bold"
-                                color="#ffffffAA"
-                                css={{ bgBlur: '#ffffff66', py: 5, px: 10, borderRadius: 20 }}
-                            >
-                                {price} đ
-                            </Text>
+                            <Row justify="space-between">
+                                <Text
+                                    span
+                                    size={12}
+                                    weight="bold"
+                                    color="#ffffffAA"
+                                    css={{ bgBlur: '#ffffff66', py: 5, px: 10, borderRadius: 20 }}
+                                >
+                                    {Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)}
+                                </Text>
+                                <Text
+                                    span
+                                    size={12}
+                                    weight="bold"
+                                    color="#ffffffAA"
+                                    css={{ bgBlur: '#ffffff66', py: 5, px: 10, borderRadius: 20 }}
+                                >
+                                    {amount} SP
+                                </Text>
+                            </Row>
                             <Text h3 color="#ffffffAA">
                                 CATEGORY
                             </Text>
